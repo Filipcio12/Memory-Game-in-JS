@@ -46,12 +46,20 @@ function main() {
     // Get 8 random paths
     let img = [];
     for (let i = 0; i < 8; i++) {
-        let n = Math.floor(Math.random() * 51);
+        let n = Math.floor(Math.random() * paths.length);
         while (img.includes(paths[n])) {
-            n = Math.floor(Math.random() * 51);
+            n = Math.floor(Math.random() * paths.length);
         }
         img.push(paths[n]);
     }
+
+    img.push(...img);
+
+    // Shuffle a copy of img
+    for (let i = img.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [img[i], img[j]] = [img[j], img[i]];
+      }
 
     // Create cards with no fronts
     let cards = [];
@@ -64,12 +72,21 @@ function main() {
         }
     }
 
+    // Add fronts
+    for (let i in cards) {
+       let image = new Image();
+       image.src = img[i];
+       image.onload;
+       cards[i].front = image;
+    }
+
     ctx.beginPath();
     ctx.rect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "green";
     ctx.fill();
 
     for (let i in cards) {
+        cards[i].side = 'front';
         cards[i].draw();
     }
 }
